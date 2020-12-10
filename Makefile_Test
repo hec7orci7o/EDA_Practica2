@@ -1,0 +1,30 @@
+#***************************************************************************
+# File:   	Makefile
+# Authores: Pablo Lacueva & Hector Toral
+# Date:   	dic 2020
+# Coms:   	
+#         	Ejecutar 'make' para compilar
+#         	Ejecutar 'make clean'para limpiar (borrar lo que genere)
+#***************************************************************************
+
+#---------------------------------------------------------
+# macros
+RM = /bin/rm -f  # para limpiar
+CC = g++         # para compilar
+#---------------------------------------------------------
+# opciones de compilación
+CPPFLAGS=-std=c++11 # opciones compilación
+#---------------------------------------------------------
+fullTest: fullTest.o puntos2D.o colecciones.h pila.h
+	$(CC)  fullTest.o puntos2D.o colecciones.h pila.h -o fullTest $(CPPFLAGS)
+#---------------------------------------------------------
+fullTest.o:
+	$(CC) fullTest.cpp -c $(CPPFLAGS)
+#---------------------------------------------------------
+puntos2D.o: puntos2D.cpp
+	$(CC) puntos2D.cpp -c $(CPPFLAGS)
+#---------------------------------------------------------
+clean:
+	$(RM) fullTest
+	$(RM) *.o
+	$(RM) salida.txt

@@ -15,8 +15,8 @@ CC = g++         # para compilar
 # opciones de compilación
 CPPFLAGS=-std=c++11 # opciones compilación
 #---------------------------------------------------------
-practica2: practica2.o puntos2D.o colecciones.h
-	$(CC)  practica2.o puntos2D.o colecciones.h -o practica2 $(CPPFLAGS)
+practica2: practica2.o puntos2D.o colecciones.h pila.h
+	$(CC)  practica2.o puntos2D.o colecciones.h pila.h -o practica2 $(CPPFLAGS)
 #---------------------------------------------------------
 practica2.o:
 	$(CC) practica2.cpp -c $(CPPFLAGS)
@@ -26,7 +26,5 @@ puntos2D.o: puntos2D.cpp
 #---------------------------------------------------------
 clean:
 	$(RM) practica2
-	$(RM) practica2 practica2.o
-	$(RM) puntos2D.o
-	$(RM) colecciones.o
+	$(RM) *.o
 	$(RM) salida.txt

@@ -24,7 +24,7 @@ template<typename Elemento> void desapilar (pila<Elemento>& p);
 template<typename Elemento> void cima (pila<Elemento>& p, Elemento& e, bool& error);
 template<typename Elemento> bool esVacia (pila<Elemento>& p);
 template<typename Elemento> int altura (pila<Elemento>& p);
-template<typename Elemento> void duplicar (const pila<Elemento> pilaEnt, pila<Elemento>& pilaSal);
+//template<typename Elemento> void duplicar (const pila<Elemento> pilaEnt, pila<Elemento>& pilaSal);
 template<typename Elemento> bool operator== (const pila<Elemento> pila1, const pila<Elemento> pila2);
 template<typename Elemento> void liberar (pila<Elemento>& p);
 
@@ -40,7 +40,7 @@ struct pila {
     friend void cima<Elemento> (pila<Elemento>& p, Elemento& e, bool& error);
     friend bool esVacia<Elemento> (pila<Elemento>& p);
     friend int altura<Elemento> (pila<Elemento>& p);
-    friend void duplicar<Elemento> (const pila<Elemento> pilaEnt, pila<Elemento>& pilaSal);
+    //friend void duplicar<Elemento> (const pila<Elemento> pilaEnt, pila<Elemento>& pilaSal);
     friend bool operator==<Elemento> (const pila<Elemento> pila1, const pila<Elemento> pila2);
     friend void liberar<Elemento> (pila<Elemento>& p);
 
@@ -108,22 +108,19 @@ void duplicar (const pila<Elemento> pilaEnt, pila<Elemento>& pilaSal) {
     if (esVacia(pilaEnt)) {
         crearVacia(pilaSal);
     } else {
-        typename pila<Elemento>::unDato* ptEnt;
-        ptEnt = pilaEnt.cim;
-
-        typename pila<Elemento>::unDato* ptSal;
-        ptSal = pilaSal.cim;
-        pilaSal.cim->dato = ptEnt->dato;
-        ptSal = pilaSal.cim;
-        
+        typename pila<Elemento>::unDato* ptEnt = pilaEnt.cim;
+        typename pila<Elemento>::unDato* ptSal = new typename pila<Elemento>::unDato;
+        pilaSal.cim = ptSal;
+        pilaSal.cim->sig = nullptr;
         ptEnt = ptEnt->sig;
         while (ptEnt != nullptr) {
-            typename pila<Elemento>::unDato* ptSal->sig;
+            typename pila<Elemento>::unDato* aux = new typename pila<Elemento>::unDato;
+            ptSal->sig = aux;
+            aux->dato = ptEnt->dato;
             ptSal = ptSal->sig;
-            ptSal->dato = ptEnt->dato;
             ptEnt = ptEnt->sig;
         }
-        pilaSal->sig = nullptr;
+        ptSal->sig = nullptr;
         pilaSal.alt = pilaEnt.alt;
     }
 }
