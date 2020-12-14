@@ -72,7 +72,7 @@ struct coleccion {
     friend void aniadir<Elemento> (coleccion<Elemento>& c, const Elemento& e);
     friend bool esta<Elemento> (const coleccion<Elemento>& c, const Elemento& e);
     friend void obtenerUltimo<Elemento> (const coleccion<Elemento>& c, const Elemento& e, Elemento& ultimo);
-    friend void borrar<Elemento> (coleccion<Elemento>& c, const Elemento& e);
+    friend void borrar<Elemento> (coleccion<Elemento>& c, const Elemento& e, typename coleccion<Elemento>::Nodo*& Nodo);
     friend void borrarUltimo<Elemento> (coleccion<Elemento>& c, const Elemento& e);
     friend int  tamanio<Elemento> (const coleccion<Elemento>& c);
     friend bool esVacia<Elemento> (const coleccion<Elemento>& c);
@@ -182,13 +182,46 @@ void obtenerUltimo (const coleccion<Elemento>& c, const Elemento& e, Elemento& u
 }
 
 template<typename Elemento>
-void borrarRec (coleccion<Elemento>& c, const Elemento e, typename coleccion<Elemento>::Nodo*& Nodo, bool& borrado) {
+void borrarMax (coleccion<Elemento>& c, Elemento& e, typename coleccion<Elemento>::Nodo*& Nodo) {
+    if (Nodo->dcha == nullptr) {    // El máximo del árbol esta en la raiz
+        typename coleccion<Elemento>::Nodo* aux = new typename coleccion<Elemento>::Nodo;
 
+        Elemento dato;
+        bool error;
+        cima(Nodo->p, dato, error);
+        
+        e = dato;
+        aux = Nodo;
+        Nodo = Nodo->izq;
+        delete aux;
+    } else {    // El máximo del árbol esta en el subárbol derecho
+        borrarMax(c, e, Nodo->dcha);
+    }
 }
 
 template<typename Elemento>
-void borrar (coleccion<Elemento>& c, const Elemento e) {
+void borrar (coleccion<Elemento>& c, const Elemento& e, typename coleccion<Elemento>::Nodo*& Nodo) {
+    if (Nodo != nullptr) {
+        Elemento dato;
+        bool error;
+        cima(Nodo->p, dato, error);
 
+        if (e == dato) {    // Elemento encontrado
+            typename coleccion<Elemento>::Nodo* aux = new typename coleccion<Elemento>::Nodo;
+            liberar(Nodo->p);
+            if (Nodo->izq == nullptr) { // Sustitucion del nodo por su sucesor(derecho)
+                aux = Nodo;
+                Nodo = Nodo->dcha;
+                delete aux;
+            } else {
+                borrarMax(c, e, Nodo->izq);  // Si tiene hijo izquierdo...
+            }
+        } else if (e < dato) {
+            borrar (c, e, Nodo);
+        } else {
+            borrar (c, e, Nodo);
+        }
+    }
 }
 
 template<typename Elemento>
