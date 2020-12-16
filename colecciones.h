@@ -197,16 +197,10 @@ void obtenerUltimo (coleccion<Elemento>& c, const Elemento& e, Elemento& ultimo)
 }
 
 template<typename Elemento>
-void borrarMax (Elemento& e, typename coleccion<Elemento>::Nodo*& nodo) {
+void borrarMax (pila<Elemento>& e, typename coleccion<Elemento>::Nodo*& nodo) {
     if (nodo->dcha == nullptr) {    // El máximo del árbol esta en la raiz
-        typename coleccion<Elemento>::Nodo* aux = new typename coleccion<Elemento>::Nodo;
-
-        // Para que queremos devolver el dato?
-        Elemento dato;
-        bool error;
-        cima<Elemento> (nodo->p, dato, error);
-        e = dato;
-        //______
+        typename coleccion<Elemento>::Nodo* aux;
+        e = nodo->p;
 
         aux = nodo;
         nodo = nodo->izq;
@@ -224,14 +218,14 @@ void borrarRec (Elemento& e, typename coleccion<Elemento>::Nodo*& nodo) {
         cima<Elemento> (nodo->p, dato, error);
 
         if (e == dato) {    // Elemento encontrado
-            typename coleccion<Elemento>::Nodo* aux = new typename coleccion<Elemento>::Nodo;
+            typename coleccion<Elemento>::Nodo* aux;
             liberar<Elemento> (nodo->p);
             if (nodo->izq == nullptr) { // Sustitucion del nodo por su sucesor(derecho)
                 aux = nodo;
                 nodo = nodo->dcha;
                 delete aux;
             } else {
-                borrarMax<Elemento> (e, nodo->izq);  // Si tiene hijo izquierdo...
+                borrarMax<Elemento> (nodo->p, nodo->izq);  // Si tiene hijo izquierdo...
             }
         } else if (e < dato) {
             borrarRec<Elemento> (e, nodo->izq);
@@ -262,8 +256,8 @@ void borrarUltimoRec (Elemento& e, typename coleccion<Elemento>::Nodo*& nodo, bo
                     aux = nodo;
                     nodo = nodo->dcha;
                     delete aux;
-                } else {
-                    borrarMax<Elemento> (e, nodo->izq);  // Si tiene hijo izquierdo...
+                } else {    // igual falta el si derecha es nullptr
+                    borrarMax<Elemento> (nodo->p, nodo->izq);  // Si tiene hijo izquierdo...
                 }
             }
         } else if (e < dato) {
@@ -296,37 +290,42 @@ bool esVacia (const coleccion<Elemento>& c) {
 
 template<typename Elemento>
 void iniciarIterador (coleccion<Elemento>& c) {
-    typename coleccion<Elemento>::Nodo* aux = new typename coleccion<Elemento>::Nodo;
-    crearVacia<Elemento> (c.iter);
+    typename coleccion<Elemento>::Nodo* aux;
+    crearVacia (c.iter);
     aux = c.raiz;
     while (aux != nullptr) {
-        apilar<Elemento> (c.iter, aux);
+        iniciarIterador (aux->p);
+        apilar (c.iter, aux);
         aux = aux->izq;
     }
 }
 
 template<typename Elemento>
 bool existeSiguiente (const coleccion<Elemento>& c) {
-    return !esVacia<Elemento> (c.iter);
+    return !esVacia (c.iter);
 }
 
 // PARCIAL: Operación no definida si no quedan elementos por visitar.
 template<typename Elemento>
 void siguiente (coleccion<Elemento> &c, Elemento& next, bool& error) {
-    if (existeSiguiente<Elemento> (c)) {
-        typename coleccion<Elemento>::Nodo* aux = new typename coleccion<Elemento>::Nodo;
+    if (existeSiguiente(c)) {
+        typename coleccion<Elemento>::Nodo* aux;
         aux = cima<Elemento> (c.iter);
-        desapilar<Elemento> (c.iter);
+        siguiente(aux->p, next, error);
 
-        cima<Elemento> (aux->p, next, error);
-        aux = aux->dcha;
-        while (aux != nullptr) {
-            apilar<Elemento> (c.iter, aux);
-            aux = aux->izq;
+        if (!existeSiguiente(aux->p)) {
+            desapilar<Elemento> (c.iter);
+            cima<Elemento> (aux->p, next, error);
+            aux = aux->dcha;
+            while (aux != nullptr) {
+                iniciarIterador (aux->p);
+                apilar<Elemento> (c.iter, aux);
+                aux = aux->izq;
+            }
         }
-        error = false;  // Error = false
+        error = false;
     } else {
-        error = true;   // Error = true
+        error = true;
     }
 }
 

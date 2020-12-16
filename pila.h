@@ -62,52 +62,72 @@ template<typename Elemento> void siguiente (pila<Elemento>& p, Elemento& e, bool
 
 template <typename Elemento>
 struct pila {
-    friend void crearVacia<Elemento> (pila<Elemento>& p);
-    friend void apilar<Elemento> (pila<Elemento>& p, const Elemento& e);
-    friend void desapilar<Elemento> (pila<Elemento>& p);
-    friend void cima<Elemento> (const pila<Elemento>& p, Elemento& e, bool& error);
-    friend bool esVacia<Elemento> (const pila<Elemento>& p);
-    friend int altura<Elemento> (const pila<Elemento>& p);
-    //friend void duplicar<Elemento> (const pila<Elemento>& pilaEnt, pila<Elemento>& pilaSal);
-    friend bool operator==<Elemento> (const pila<Elemento>& pila1, const pila<Elemento>& pila2);
-    friend void liberar<Elemento> (pila<Elemento>& p);
-
-    friend void iniciarIterador<Elemento> (pila<Elemento>& p);
-    friend bool existeSiguiente<Elemento> (const pila<Elemento>& p);
-    friend void siguiente<Elemento> (pila<Elemento>& p, Elemento& e, bool& error);
     private:
         struct unDato {
             Elemento dato;  // dato de tipo <Elemento>. <Elemento> es un tipo generico
             unDato* sig;    // puntero que apunta a la futura cima.
+            unDato* ant;    // puntero que apunta al dato anterior.
         };
         unDato* cim;
+        unDato* bas;
         unDato* iter;
         int alt;
+    public:
+        friend void crearVacia<Elemento> (pila<Elemento>& p);
+        friend void apilar<Elemento> (pila<Elemento>& p, const Elemento& e);
+        friend void desapilar<Elemento> (pila<Elemento>& p);
+        friend void cima<Elemento> (const pila<Elemento>& p, Elemento& e, bool& error);
+        friend bool esVacia<Elemento> (const pila<Elemento>& p);
+        friend int altura<Elemento> (const pila<Elemento>& p);
+        //friend void duplicar<Elemento> (const pila<Elemento>& pilaEnt, pila<Elemento>& pilaSal);
+        friend bool operator==<Elemento> (const pila<Elemento>& pila1, const pila<Elemento>& pila2);
+        friend void liberar<Elemento> (pila<Elemento>& p);
+
+        friend void iniciarIterador<Elemento> (pila<Elemento>& p);
+        friend bool existeSiguiente<Elemento> (const pila<Elemento>& p);
+        friend void siguiente<Elemento> (pila<Elemento>& p, Elemento& e, bool& error);
 };
 
 template<typename Elemento>
 void crearVacia (pila<Elemento>& p) {
+    p.bas = nullptr;
     p.cim = nullptr;
     p.alt = 0;
 }
 
+// puntero de la base cuidado con ant
 template <typename Elemento>
 void apilar (pila<Elemento>& p, const Elemento& e) {
     typename pila<Elemento>::unDato* aux = new typename pila<Elemento>::unDato;
-    aux->dato = e;
-    aux->sig = p.cim;   // La posición del nuevo elemento esta todavia sin precisar.
-    p.cim = aux;
-    p.alt++;            // Altura de la pila + 1.
+    if (altura(p) == 0) {
+        aux->dato = e;      // Guardamos el dato nuevo
+        aux->ant = nullptr;
+        aux->sig = nullptr;
+        p.bas = aux;
+        p.cim = aux;
+        p.alt++;            // Altura de la pila + 1.
+    } else {
+        aux = p.cim;        // Hacemos una copia de la cima en aux
+        aux->dato = e;      // Guardamos el dato nuevo
+        aux->ant = p.cim;   // El dato anterior es la cima antigua
+        aux->sig = nullptr; // No hay más dato por delante de la cima
+        p.cim = aux;        // Cambiamos el puntero de la cima a la nueva cima
+        p.alt++;            // Altura de la pila + 1.
+    }
 }
 
 template<typename Elemento>
 void desapilar (pila<Elemento>& p) {
     if (p.alt != 0) {
-        typename pila<Elemento>::unDato* aux = new typename pila<Elemento>::unDato;
+        typename pila<Elemento>::unDato* aux;
         aux = p.cim;
-        p.cim = p.cim->sig; // Asignamos cima al anterior dato.
+        p.cim = p.cim->ant; // Asignamos cima al anterior dato.
         delete aux;         // Liberamos la memoria donde se alamcenaba la antigua cima
         p.alt--;            // Altura de la pila - 1.
+        if (p.alt == 0) {   // Si la nueva altura es 0 los pt serán nullptr
+            p.cim = nullptr;
+            p.bas = nullptr;
+        }
     }
 }
 
@@ -129,6 +149,7 @@ template<typename Elemento>
 int altura (const pila<Elemento>& p) {
     return p.alt;
 }
+
 /* SI SOBRA TIEMPO PREGUNTAR
 template<typename Elemento>
 void duplicar (const pila<Elemento>& pilaEnt, pila<Elemento>& pilaSal) {
@@ -170,8 +191,8 @@ bool operator== (const pila<Elemento>& pila1, const pila<Elemento>& pila2) {
         bool iguales = true;
         while (pt1 != nullptr && iguales) {
             iguales = (pt1->dato == pt2->dato);
-            pt1 = pt1->sig;
-            pt2 = pt2->sig;
+            pt1 = pt1->ant;
+            pt2 = pt2->ant;
         }
         return iguales;
     }
@@ -182,16 +203,18 @@ void liberar (pila<Elemento>& p) {
     typename pila<Elemento>::unDato* aux = new typename pila<Elemento>::unDato;
     aux = p.cim;
     while (aux != nullptr) {    // Recorremos la pila hasta la base
-        p.cim = p.cim->sig;
+        p.cim = p.cim->ant;
         delete aux;
         aux = p.cim;
     }
     p.alt = 0;
+    p.cim = nullptr;
+    p.bas = nullptr;
 }
 
 template<typename Elemento>
 void iniciarIterador (pila<Elemento>& p) {
-    p.iter = p.cim;
+    p.iter = p.bas;
 }
 
 template<typename Elemento>
@@ -205,7 +228,6 @@ void siguiente (pila<Elemento>& p, Elemento& e, bool& error) {
         error = false;
         e = p.iter->dato;
         p.iter = p.iter->sig;
-        
     } else {
         error = true;
     }

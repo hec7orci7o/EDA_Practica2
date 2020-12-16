@@ -150,7 +150,7 @@ void B (ifstream& f, ofstream& g, coleccion<puntos2D>& c) {
     f >> y;
     crear(p, x, y, "");
     if (borrar(c, p)) {
- *       g << "ELIMINADO CON EXITO: " << fixCadena(suX(p)) << " ; " << fixCadena(suY(p)) << endl;
+        g << "ELIMINADO CON EXITO: " << fixCadena(suX(p)) << " ; " << fixCadena(suY(p)) << endl;
     } else {
         g << "NINGUNO PARA ELIMINAR: " << fixCadena(suX(p)) << " ; " << fixCadena(suY(p)) << endl;
     }
