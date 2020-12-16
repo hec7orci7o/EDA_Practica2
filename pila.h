@@ -37,9 +37,6 @@ template<typename Elemento> bool esVacia (const pila<Elemento>& p);
 // Devuelve el número de elementos de <p>, 0 si no tiene elementos.
 template<typename Elemento> int altura (const pila<Elemento>& p);
 
-// Hace una copia en pilaSal de la pila almacenada en pilaEnt.
-//template<typename Elemento> void duplicar (const pila<Elemento>& pilaEnt, pila<Elemento>& pilaSal);
-
 // Devuelve verdad si y solo si pila1 y pila2 almacenan la misma pila.
 template<typename Elemento> bool operator== (const pila<Elemento>& pila1, const pila<Elemento>& pila2);
 
@@ -79,7 +76,6 @@ struct pila {
         friend void cima<Elemento> (const pila<Elemento>& p, Elemento& e, bool& error);
         friend bool esVacia<Elemento> (const pila<Elemento>& p);
         friend int altura<Elemento> (const pila<Elemento>& p);
-        //friend void duplicar<Elemento> (const pila<Elemento>& pilaEnt, pila<Elemento>& pilaSal);
         friend bool operator==<Elemento> (const pila<Elemento>& pila1, const pila<Elemento>& pila2);
         friend void liberar<Elemento> (pila<Elemento>& p);
 
@@ -99,35 +95,29 @@ void crearVacia (pila<Elemento>& p) {
 template <typename Elemento>
 void apilar (pila<Elemento>& p, const Elemento& e) {
     typename pila<Elemento>::unDato* aux = new typename pila<Elemento>::unDato;
-    if (altura(p) == 0) {
-        aux->dato = e;      // Guardamos el dato nuevo
+    aux->dato = e;
+    aux->sig = nullptr;
+    if (esVacia(p)) {
         aux->ant = nullptr;
-        aux->sig = nullptr;
         p.bas = aux;
         p.cim = aux;
-        p.alt++;            // Altura de la pila + 1.
     } else {
-        aux = p.cim;        // Hacemos una copia de la cima en aux
-        aux->dato = e;      // Guardamos el dato nuevo
-        aux->ant = p.cim;   // El dato anterior es la cima antigua
-        aux->sig = nullptr; // No hay más dato por delante de la cima
-        p.cim = aux;        // Cambiamos el puntero de la cima a la nueva cima
-        p.alt++;            // Altura de la pila + 1.
+        aux->ant = p.cim;
+        p.cim->sig = aux;
+        p.cim = aux;
+        if (p.alt == 1) p.bas->sig = aux;   // sino es aux es p.cim
     }
+    p.alt++;            // Altura de la pila + 1.
 }
 
 template<typename Elemento>
 void desapilar (pila<Elemento>& p) {
-    if (p.alt != 0) {
-        typename pila<Elemento>::unDato* aux;
+    typename pila<Elemento>::unDato* aux;
+    if (p.alt > 0) {
         aux = p.cim;
         p.cim = p.cim->ant; // Asignamos cima al anterior dato.
         delete aux;         // Liberamos la memoria donde se alamcenaba la antigua cima
         p.alt--;            // Altura de la pila - 1.
-        if (p.alt == 0) {   // Si la nueva altura es 0 los pt serán nullptr
-            p.cim = nullptr;
-            p.bas = nullptr;
-        }
     }
 }
 
@@ -149,36 +139,6 @@ template<typename Elemento>
 int altura (const pila<Elemento>& p) {
     return p.alt;
 }
-
-/* SI SOBRA TIEMPO PREGUNTAR
-template<typename Elemento>
-void duplicar (const pila<Elemento>& pilaEnt, pila<Elemento>& pilaSal) {
-    if (esVacia(pilaEnt)) {
-        crearVacia(pilaSal);
-    } else {
-        typename pila<Elemento>::unDato* ptEnt;
-        typename pila<Elemento>::unDato* ptSal;
-        ptEnt = pilaEnt.cim;    // ptEnt apunta a los datos de pilaEnt.cim: {ptEnt->e, ptEnt->sig, ptEnt->ant}
-        
-        pilaSal.cim = ptSal;
-        pilaSal.cim->sig = nullptr;
-
-        ptEnt = ptEnt->sig;
-        while (ptEnt != nullptr) {
-            typename pila<Elemento>::unDato* aux = new typename pila<Elemento>::Nodo*;
-            // Actualizamos ptSal
-            ptSal->sig = aux ;      // Creamos un "nodo" anterior para la pila.
-            aux->sig   = ptSal;     // Ese "nodo" apunta a la cima como elemento / nodo siguiente. 
-            aux->valor = ptEnt->valor;
-            // Avanzamos hacia la base de la pila.
-            ptEnt = ptEnt->sig;
-            ptSal = ptSal->sig;
-        }
-        ptSal->sig = nullptr;
-        pilaSal.alt = pilaEnt.alt;
-    }
-}
-*/
 
 template<typename Elemento>
 bool operator== (const pila<Elemento>& pila1, const pila<Elemento>& pila2) {
