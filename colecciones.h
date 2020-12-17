@@ -70,7 +70,7 @@ template<typename Elemento> void siguiente (coleccion<Elemento> &c, Elemento& ne
 template<typename Elemento> void aniadirRec (const Elemento& e, typename coleccion<Elemento>::Nodo*& nodo);
 template<typename Elemento> void estaRec (const Elemento& e, typename coleccion<Elemento>::Nodo*& nodo, bool& exito);
 template<typename Elemento> void obtenerUltimoRec (const Elemento& e, Elemento& ultimo, typename coleccion<Elemento>::Nodo*& nodo, bool& exito);
-template<typename Elemento> void borrarMax (Elemento& e, typename coleccion<Elemento>::Nodo*& nodo);
+template<typename Elemento> void borrarMax (pila<Elemento>& e, typename coleccion<Elemento>::Nodo*& nodo);
 template<typename Elemento> void borrarUltimoRec (Elemento& e, typename coleccion<Elemento>::Nodo*& nodo, bool& borrado);
 template<typename Elemento> void borrarRec (Elemento& e, typename coleccion<Elemento>::Nodo*& nodo);
 
@@ -103,7 +103,7 @@ struct coleccion {
         friend void aniadirRec<Elemento> (const Elemento& e, coleccion<Elemento>::Nodo*& nodo);
         friend void estaRec<Elemento> (const Elemento& e, coleccion<Elemento>::Nodo*& nodo, bool& exito);
         friend void obtenerUltimoRec<Elemento> (const Elemento& e, Elemento& ultimo, coleccion<Elemento>::Nodo*& nodo, bool& exito);
-        friend void borrarMax<Elemento> (Elemento& e, coleccion<Elemento>::Nodo*& nodo);
+        friend void borrarMax<Elemento> (pila<Elemento>& e, coleccion<Elemento>::Nodo*& nodo);
         friend void borrarUltimoRec<Elemento> (Elemento& e, coleccion<Elemento>::Nodo*& nodo, bool& borrado);
         friend void borrarRec<Elemento> (Elemento& e, coleccion<Elemento>::Nodo*& nodo);
 };
@@ -118,21 +118,21 @@ template<typename Elemento>
 void aniadirRec (const Elemento& e, typename coleccion<Elemento>::Nodo*& nodo) {
     if (nodo == nullptr) {
         nodo = new typename coleccion<Elemento>::Nodo;
-        crearVacia<Elemento> (nodo->p);
-        apilar<Elemento> (nodo->p, e);
+        crearVacia(nodo->p);
+        apilar(nodo->p, e);
         nodo->izq = nullptr;
         nodo->dcha = nullptr;
     } else {
         Elemento dato;
         bool error;
-        cima<Elemento> (nodo->p, dato, error);
+        cima(nodo->p, dato, error);
 
         if (e == dato) {
-            apilar<Elemento> (nodo->p, e);
+            apilar(nodo->p, e);
         } else if (e < dato) {
-            aniadirRec<Elemento> (e, nodo->izq);
+            aniadirRec(e, nodo->izq);
         } else {
-            aniadirRec<Elemento> (e, nodo->dcha);
+            aniadirRec(e, nodo->dcha);
         }
     }
 }
@@ -150,14 +150,14 @@ void estaRec (const Elemento& e, typename coleccion<Elemento>::Nodo*& nodo, bool
     } else {
         Elemento dato;
         bool error;
-        cima<Elemento> (nodo->p, dato, error);
+        cima(nodo->p, dato, error);
 
         if (e == dato) {
             exito = true;
         } else if (e < dato) {
-            estaRec<Elemento> (e, nodo->izq, exito);
+            estaRec(e, nodo->izq, exito);
         } else {
-            estaRec<Elemento> (e, nodo->dcha, exito);
+            estaRec(e, nodo->dcha, exito);
         }
     }
 }
@@ -177,15 +177,15 @@ void obtenerUltimoRec (const Elemento& e, Elemento& ultimo, typename coleccion<E
     } else {
         Elemento dato;
         bool error;
-        cima<Elemento> (nodo->p, dato, error);
+        cima(nodo->p, dato, error);
 
         if (e == dato) {
             exito = true;
             ultimo = dato;
         } else if (e < dato) {
-            obtenerUltimoRec<Elemento> (e, ultimo, nodo->izq, exito);
+            obtenerUltimoRec(e, ultimo, nodo->izq, exito);
         } else {
-            obtenerUltimoRec<Elemento> (e, ultimo, nodo->dcha, exito);
+            obtenerUltimoRec(e, ultimo, nodo->dcha, exito);
         }
     }
 }
@@ -206,7 +206,7 @@ void borrarMax (pila<Elemento>& e, typename coleccion<Elemento>::Nodo*& nodo) {
         nodo = nodo->izq;
         delete aux;
     } else {    // El máximo del árbol esta en el subárbol derecho
-        borrarMax<Elemento> (e, nodo->dcha);
+        borrarMax (e, nodo->dcha);
     }
 }
 
@@ -215,22 +215,22 @@ void borrarRec (Elemento& e, typename coleccion<Elemento>::Nodo*& nodo) {
     if (nodo != nullptr) {
         Elemento dato;
         bool error;
-        cima<Elemento> (nodo->p, dato, error);
+        cima(nodo->p, dato, error);
 
         if (e == dato) {    // Elemento encontrado
             typename coleccion<Elemento>::Nodo* aux;
-            liberar<Elemento> (nodo->p);
+            liberar(nodo->p);
             if (nodo->izq == nullptr) { // Sustitucion del nodo por su sucesor(derecho)
                 aux = nodo;
                 nodo = nodo->dcha;
                 delete aux;
             } else {
-                borrarMax<Elemento> (nodo->p, nodo->izq);  // Si tiene hijo izquierdo...
+                borrarMax(nodo->p, nodo->izq);  // Si tiene hijo izquierdo...
             }
         } else if (e < dato) {
-            borrarRec<Elemento> (e, nodo->izq);
+            borrarRec(e, nodo->izq);
         } else {
-            borrarRec<Elemento> (e, nodo->dcha);
+            borrarRec(e, nodo->dcha);
         }
     }
 }
@@ -245,11 +245,11 @@ void borrarUltimoRec (Elemento& e, typename coleccion<Elemento>::Nodo*& nodo, bo
     if (nodo != nullptr) {
         Elemento dato;
         bool error;
-        cima<Elemento> (nodo->p, dato, error);
+        cima(nodo->p, dato, error);
 
         if (e == dato) {    // Elemento encontrado
             borrado = true;
-            desapilar<Elemento> (nodo->p);
+            desapilar(nodo->p);
             if (esVacia(nodo->p)) {
                 if (nodo->izq == nullptr) { // Sustitución del nodo por su sucesor(derecho)
                     typename coleccion<Elemento>::Nodo* aux = new typename coleccion<Elemento>::Nodo;
@@ -257,13 +257,13 @@ void borrarUltimoRec (Elemento& e, typename coleccion<Elemento>::Nodo*& nodo, bo
                     nodo = nodo->dcha;
                     delete aux;
                 } else {    // igual falta el si derecha es nullptr
-                    borrarMax<Elemento> (nodo->p, nodo->izq);  // Si tiene hijo izquierdo...
+                    borrarMax(nodo->p, nodo->izq);  // Si tiene hijo izquierdo...
                 }
             }
         } else if (e < dato) {
-            borrarRec<Elemento> (e, nodo->izq);
+            borrarUltimoRec(e, nodo->izq, borrado);
         } else {
-            borrarRec<Elemento> (e, nodo->dcha);
+            borrarUltimoRec(e, nodo->dcha, borrado);
         }
     } else {
         borrado = false;
@@ -275,7 +275,6 @@ void borrarUltimo (coleccion<Elemento>& c, Elemento& e) {
     bool borrado = false;
     borrarUltimoRec<Elemento> (e, c.raiz, borrado);
     if (borrado) c.total--;
-    cout << c.total;
 }
 
 template<typename Elemento>
@@ -310,16 +309,16 @@ template<typename Elemento>
 void siguiente (coleccion<Elemento> &c, Elemento& next, bool& error) {
     if (existeSiguiente(c)) {
         typename coleccion<Elemento>::Nodo* aux;
-        aux = cima<Elemento> (c.iter);
+        cima(c.iter, aux, error);
         siguiente(aux->p, next, error);
 
         if (!existeSiguiente(aux->p)) {
-            desapilar<Elemento> (c.iter);
-            cima<Elemento> (aux->p, next, error);
+            desapilar(c.iter);
+            cima(aux->p, next, error);
             aux = aux->dcha;
             while (aux != nullptr) {
                 iniciarIterador (aux->p);
-                apilar<Elemento> (c.iter, aux);
+                apilar(c.iter, aux);
                 aux = aux->izq;
             }
         }
