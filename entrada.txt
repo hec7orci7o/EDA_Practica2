@@ -1,0 +1,19 @@
+A
+0 0 CERO
+A
+-3 -3 -TRES
+A
+3 3 TRES
+A
+1.5 1.5 UNO_Y_MEDIO
+A
+-1.5 1.5 -UNO_y_MEDIO
+A
+2 2
+A
+4 4
+A
+-5 -5
+A
+-5 -5
+A
