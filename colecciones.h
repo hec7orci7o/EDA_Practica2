@@ -105,7 +105,7 @@ struct coleccion {
         friend bool obtenerUltimoRec<Elemento> (coleccion<Elemento>::Nodo*& nodo, const Elemento& e, Elemento& ultimo);
         friend void borrarMax<Elemento> (coleccion<Elemento>::Nodo*& nodo, pila<Elemento>& e);
         friend bool borrarUltimoRec<Elemento> (coleccion<Elemento>::Nodo*& nodo, Elemento& e);
-        friend int borrarRec<Elemento> (coleccion<Elemento>::Nodo*& nodo, Elemento& e);
+        friend int  borrarRec<Elemento> (coleccion<Elemento>::Nodo*& nodo, Elemento& e);
 };
 
 template<typename Elemento>
@@ -254,14 +254,14 @@ bool borrarUltimoRec (typename coleccion<Elemento>::Nodo*& nodo, Elemento& e) {
         cima(nodo->p, dato, error);
 
         if (e == dato) {    // Elemento encontrado
+            typename coleccion<Elemento>::Nodo* aux;
             desapilar(nodo->p);
             if (esVacia(nodo->p)) {
-                typename coleccion<Elemento>::Nodo* aux;
-                if (nodo->izq == nullptr) { // Sustitución del nodo por su sucesor(derecho)
+                if (nodo->izq == nullptr) { // Sustitucion del nodo por su sucesor(derecho)
                     aux = nodo;
                     nodo = nodo->dcha;
                     delete aux;
-                } else {    // igual falta el si derecha es nullptr
+                } else {
                     borrarMax(nodo->izq, nodo->p);  // Si tiene ambos hijos...
                 }
             }
@@ -272,7 +272,7 @@ bool borrarUltimoRec (typename coleccion<Elemento>::Nodo*& nodo, Elemento& e) {
             return borrarUltimoRec(nodo->dcha, e);
         }
     } else {
-        return false;
+        return 0;
     }
 }
 

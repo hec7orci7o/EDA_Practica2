@@ -6,9 +6,6 @@
 //          Link del repositorio: https://github.com/hec7orci7o/EDA_Practica2
 //-------------------------------------------------------------------------------------------
 
-#include <iostream>
-#include <iomanip>
-#include <sstream>
 #include "puntos2D.h"
 
 using namespace std;
