@@ -1,0 +1,65 @@
+A
+2.3 5.0 random
+A
+-1.0 7.0 primer negativo
+A
+5 5 entero
+A
+3.0 3.0 primero
+A
+3.0 3.0 segundo
+A
+7.4 2.1 mayor
+A
+3.0 3.0 tercero
+A
+-5 -5 mayor negativo
+A
+3.0 3.0 cuarto
+A
+-3.0 -3.0 negativo
+E
+-5 -5
+E
+2.3 5
+E
+7.4 2.1
+E
+10 -10
+OU
+3.00 3
+A
+14.7 2.1 OTRO+
+A
+2.1 14.7 -OTRO
+A
+14.7 2.1 mayor
+A
+14.7 3.1 segundo
+A
+3.0 3.0 quinto
+A
+3.0 3.0 sexto
+BU
+3.0 3.0
+BU
+14.7 2.1
+BU
+3.0 3.0
+B
+14.7 2.1
+B
+3.0 3
+A
+5 5 repe1
+A
+5 5 repe2
+A
+5 5 repe3
+A
+5 5 repe4
+A
+5 5 repe5
+B
+5 5
+LT

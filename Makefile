@@ -12,19 +12,26 @@
 RM = /bin/rm -f  # para limpiar
 CC = g++         # para compilar
 #---------------------------------------------------------
+EJECUTABLE = practica2
+MAIN = practica2
+
+COLECCION = colecciones
+PILA = pila
+DATO = puntos2D
+#---------------------------------------------------------
 # opciones de compilación
 CPPFLAGS=-std=c++11 # opciones compilación
 #---------------------------------------------------------
-practica2: practica2.o puntos2D.o colecciones.h pila.h
-	$(CC)  practica2.o puntos2D.o colecciones.h pila.h -o practica2 $(CPPFLAGS)
+${MAIN}: ${MAIN}.o ${DATO}.o ${COLECCION}.h ${PILA}.h
+	$(CC)  ${MAIN}.o ${DATO}.o ${COLECCION}.h ${PILA}.h -o ${EJECUTABLE} $(CPPFLAGS)
 #---------------------------------------------------------
-practica2.o:
-	$(CC) practica2.cpp -c $(CPPFLAGS)
+${MAIN}.o:
+	$(CC) ${MAIN}.cpp -c $(CPPFLAGS)
 #---------------------------------------------------------
-puntos2D.o: puntos2D.cpp
-	$(CC) puntos2D.cpp -c $(CPPFLAGS)
+${DATO}.o: ${DATO}.cpp
+	$(CC) ${DATO}.cpp -c $(CPPFLAGS)
 #---------------------------------------------------------
 clean:
-	$(RM) practica2
+	$(RM) ${MAIN}
 	$(RM) *.o
 	$(RM) salida.txt

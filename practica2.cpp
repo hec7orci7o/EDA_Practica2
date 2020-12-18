@@ -33,7 +33,7 @@ void BU (ifstream& f, ofstream& g, coleccion<puntos2D>& c);
 // Borra todos los elementos <puntos2D> iguales al introducido de la colección <c>.
 void B (ifstream& f, ofstream& g, coleccion<puntos2D>& c);
 // Muestra todos los elementos <puntos2D> pertenecientes a la colección <c> iguales al introducido.
-void LI (ifstream& f, ofstream& g, coleccion<puntos2D>& c);
+//void LI (ifstream& f, ofstream& g, coleccion<puntos2D>& c);
 // Lista todos los elementos de la colección.
 void LT (ifstream& f, ofstream& g, coleccion<puntos2D>& c);
 
@@ -67,7 +67,7 @@ void selecINST(ifstream& f, ofstream& g, coleccion<puntos2D>& c, const string IN
     if (INST == "OU") OU(f, g, c);
     if (INST == "BU") BU(f, g, c);
     if (INST ==  "B")  B(f, g, c);
-    if (INST == "LI") LI(f, g, c);
+    //if (INST == "LI") LI(f, g, c);
     if (INST == "LT") LT(f, g, c);
 }
 
@@ -83,7 +83,7 @@ void A (ifstream& f, ofstream& g, coleccion<puntos2D>& c) {
     f >> d;
 
     crear(p, x, y, d);
-    aniadir(c, p);
+    anyadir(c, p);
 
     g << "INTRODUCIDO: " << generarCadena(p) << endl;
 }
@@ -155,7 +155,7 @@ void B (ifstream& f, ofstream& g, coleccion<puntos2D>& c) {
         g << "NINGUNO PARA ELIMINAR: " << fixCadena(suX(p)) << " ; " << fixCadena(suY(p)) << endl;
     }
 }
-
+/*
 // Pre:  Coord_X,Coord_Y
 // Post:
 //  -----
@@ -180,16 +180,18 @@ void LI (ifstream& f, ofstream& g, coleccion<puntos2D>& c) {
     g << "-----TOTAL " << TOTAL << " IGUALES A: " << fixCadena(suX(pF)) << " ; " << fixCadena(suY(pF)) << endl;
 }
 
+*/
 // Pre:  Coleccion de puntos2D
 // Post:
 //  -----TOTAL: <c.total>
 //  Coord_Xi ; Coord_Yi ; Descripcion_i
 //  -----
 void LT (ifstream& f, ofstream& g, coleccion<puntos2D>& c) {
+    cout << "hola";
     puntos2D p;
-    g << "-----TOTAL: " << tamanio(c) << endl;
     iniciarIterador (c);
-    while (siguiente(c,p)) {
+    g << "-----TOTAL: " << tamanio(c) << endl;
+    while (siguiente(c, p)) {
         g << generarCadena(p) << endl;
     }
     g << "-----" << endl;

@@ -2,7 +2,7 @@
 // File:    colecciones.h
 // Authors: Pablo Lacueva(799134) & Hector Toral(798095)
 // Date:    nov 2020
-// Coms:    Practica 1 de EDA
+// Coms:    Practica 2 de EDA
 //          Link del repositorio: https://github.com/hec7orci7o/EDA_Practica1
 //-------------------------------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ template<typename Elemento> void crear (coleccion<Elemento>& c);
 // RECORDAR: los elementos de <c> se ordenan asi:
 // Elementos menores en un subárbol izquierdo, mayores en el derecho e iguales en el mismo nodo.
 // Si en <c> ya había algún elemento igual a <e>, este quedará como el último de todos los iguales.
-template<typename Elemento> void aniadir (coleccion<Elemento>& c, const Elemento& e);
+template<typename Elemento> void anyadir (coleccion<Elemento>& c, const Elemento& e);
 
 // Devuelve "TRUE" si y solo si en <c> hay algún elemento igual a <e>.
 template<typename Elemento> bool esta (coleccion<Elemento>& c, const Elemento& e);
@@ -36,20 +36,20 @@ template<typename Elemento> bool esta (coleccion<Elemento>& c, const Elemento& e
 // Si en <c> hay algún elemento igual a <e>, devuelve el último elemento igual a <e> que fue
 // añadido a la colección <c>.
 // PARCIAL: Operación no definida si <e> no esta en c
-template<typename Elemento> void obtenerUltimo (coleccion<Elemento>& c, const Elemento& e, Elemento& ultimo);
+template<typename Elemento> bool obtenerUltimo (coleccion<Elemento>& c, const Elemento& e, Elemento& ultimo);
 
 // Si en <c> hay algún elemento igual a <e>, devuelve la colección resultante de borrar de <c>
 // todos los elementos iguales a <e>.
 // En caso contrario, devuelve una colección igual a <c>.
-template<typename Elemento> void borrar (coleccion<Elemento>& c, Elemento& e);
+template<typename Elemento> bool borrar (coleccion<Elemento>& c, Elemento& e);
 
 // Si en <c> hay algún elemento igual a <e>, devuelve la colección resultante de borrar de <c>
 // el último elemento igual a <e> que fue añadido a la colección.
 // En caso contrario devuelve una colección igual a <c>.
-template<typename Elemento> void borrarUltimo (coleccion<Elemento>& c, Elemento& e);
+template<typename Elemento> bool borrarUltimo (coleccion<Elemento>& c, Elemento& e);
 
 // Devuelve el número total de elementos de la colección.
-template<typename Elemento> int  tamanio (const coleccion<Elemento>& c);
+template<typename Elemento> int tamanio (const coleccion<Elemento>& c);
 
 // Devuelve "TRUE" si y solo si <c> no tiene ningún elemento.
 template<typename Elemento> bool esVacia (const coleccion<Elemento>& c);
@@ -64,15 +64,15 @@ template<typename Elemento> bool existeSiguiente (const coleccion<Elemento>& c);
 
 // Devuelve el siguiente elemento a visitar con el iterador de la colección <c> y avanza el iterador
 // PARCIAL: Operación no definida si no quedan elementos por visitar.
-template<typename Elemento> void siguiente (coleccion<Elemento> &c, Elemento& next, bool& error);
+template<typename Elemento> bool siguiente (coleccion<Elemento> &c, Elemento& next);
 
 // FUNCIONES AUXILIARES, NO USAR BAJO NINGÚN CONCEPTO.
-template<typename Elemento> void aniadirRec (const Elemento& e, typename coleccion<Elemento>::Nodo*& nodo);
-template<typename Elemento> void estaRec (const Elemento& e, typename coleccion<Elemento>::Nodo*& nodo, bool& exito);
-template<typename Elemento> void obtenerUltimoRec (const Elemento& e, Elemento& ultimo, typename coleccion<Elemento>::Nodo*& nodo, bool& exito);
-template<typename Elemento> void borrarMax (pila<Elemento>& e, typename coleccion<Elemento>::Nodo*& nodo);
-template<typename Elemento> void borrarUltimoRec (Elemento& e, typename coleccion<Elemento>::Nodo*& nodo, bool& borrado);
-template<typename Elemento> void borrarRec (Elemento& e, typename coleccion<Elemento>::Nodo*& nodo);
+template<typename Elemento> void anyadirRec (const Elemento& e, typename coleccion<Elemento>::Nodo*& nodo);
+template<typename Elemento> bool estaRec (typename coleccion<Elemento>::Nodo*& nodo, const Elemento& e);
+template<typename Elemento> bool obtenerUltimoRec (typename coleccion<Elemento>::Nodo*& nodo, const Elemento& e, Elemento& ultimo);
+template<typename Elemento> void borrarMax (typename coleccion<Elemento>::Nodo*& nodo, pila<Elemento>& e);
+template<typename Elemento> bool borrarUltimoRec (typename coleccion<Elemento>::Nodo*& nodo, Elemento& e);
+template<typename Elemento> int  borrarRec (typename coleccion<Elemento>::Nodo*& nodo, Elemento& e);
 
 template <typename Elemento>
 struct coleccion {
@@ -87,25 +87,25 @@ struct coleccion {
         int total;
     public:
         friend void crear<Elemento> (coleccion<Elemento>& c);
-        friend void aniadir<Elemento> (coleccion<Elemento>& c, const Elemento& e);
+        friend void anyadir<Elemento> (coleccion<Elemento>& c, const Elemento& e);
         friend bool esta<Elemento> (coleccion<Elemento>& c, const Elemento& e);
-        friend void obtenerUltimo<Elemento> (coleccion<Elemento>& c, const Elemento& e, Elemento& ultimo);
-        friend void borrar<Elemento> (coleccion<Elemento>& c, Elemento& e);
-        friend void borrarUltimo<Elemento> (coleccion<Elemento>& c, Elemento& e);
-        friend int  tamanio<Elemento> (const coleccion<Elemento>& c);
+        friend bool obtenerUltimo<Elemento> (coleccion<Elemento>& c, const Elemento& e, Elemento& ultimo);
+        friend bool borrar<Elemento> (coleccion<Elemento>& c, Elemento& e);
+        friend bool borrarUltimo<Elemento> (coleccion<Elemento>& c, Elemento& e);
+        friend int tamanio<Elemento> (const coleccion<Elemento>& c);
         friend bool esVacia<Elemento> (const coleccion<Elemento>& c);
 
         friend void iniciarIterador<Elemento> (coleccion<Elemento>& c);
         friend bool existeSiguiente<Elemento> (const coleccion<Elemento>& c);
-        friend void siguiente<Elemento> (coleccion<Elemento> &c, Elemento& next, bool& error);
+        friend bool siguiente<Elemento> (coleccion<Elemento> &c, Elemento& next);
 
         // Funciones auxiliares
-        friend void aniadirRec<Elemento> (const Elemento& e, coleccion<Elemento>::Nodo*& nodo);
-        friend void estaRec<Elemento> (const Elemento& e, coleccion<Elemento>::Nodo*& nodo, bool& exito);
-        friend void obtenerUltimoRec<Elemento> (const Elemento& e, Elemento& ultimo, coleccion<Elemento>::Nodo*& nodo, bool& exito);
-        friend void borrarMax<Elemento> (pila<Elemento>& e, coleccion<Elemento>::Nodo*& nodo);
-        friend void borrarUltimoRec<Elemento> (Elemento& e, coleccion<Elemento>::Nodo*& nodo, bool& borrado);
-        friend void borrarRec<Elemento> (Elemento& e, coleccion<Elemento>::Nodo*& nodo);
+        friend void anyadirRec<Elemento> (const Elemento& e, coleccion<Elemento>::Nodo*& nodo);
+        friend bool estaRec<Elemento> (coleccion<Elemento>::Nodo*& nodo, const Elemento& e);
+        friend bool obtenerUltimoRec<Elemento> (coleccion<Elemento>::Nodo*& nodo, const Elemento& e, Elemento& ultimo);
+        friend void borrarMax<Elemento> (coleccion<Elemento>::Nodo*& nodo, pila<Elemento>& e);
+        friend bool borrarUltimoRec<Elemento> (coleccion<Elemento>::Nodo*& nodo, Elemento& e);
+        friend int borrarRec<Elemento> (coleccion<Elemento>::Nodo*& nodo, Elemento& e);
 };
 
 template<typename Elemento>
@@ -115,7 +115,7 @@ void crear (coleccion<Elemento>& c) {
 }
 
 template<typename Elemento>
-void aniadirRec (const Elemento& e, typename coleccion<Elemento>::Nodo*& nodo) {
+void anyadirRec (const Elemento& e, typename coleccion<Elemento>::Nodo*& nodo) {
     if (nodo == nullptr) {
         nodo = new typename coleccion<Elemento>::Nodo;
         crearVacia(nodo->p);
@@ -130,88 +130,84 @@ void aniadirRec (const Elemento& e, typename coleccion<Elemento>::Nodo*& nodo) {
         if (e == dato) {
             apilar(nodo->p, e);
         } else if (e < dato) {
-            aniadirRec(e, nodo->izq);
+            anyadirRec(e, nodo->izq);
         } else {
-            aniadirRec(e, nodo->dcha);
+            anyadirRec(e, nodo->dcha);
         }
     }
 }
 
 template<typename Elemento>
-void aniadir (coleccion<Elemento>& c, const Elemento& e) {
-    aniadirRec<Elemento> (e, c.raiz);
+void anyadir (coleccion<Elemento>& c, const Elemento& e) {
+    anyadirRec<Elemento> (e, c.raiz);
     c.total++;
 }
 
 template<typename Elemento>
-void estaRec (const Elemento& e, typename coleccion<Elemento>::Nodo*& nodo, bool& exito) {
+bool estaRec (typename coleccion<Elemento>::Nodo*& nodo, const Elemento& e) {
     if (nodo == nullptr) {
-        exito = false;
+        return false;
     } else {
         Elemento dato;
         bool error;
         cima(nodo->p, dato, error);
 
         if (e == dato) {
-            exito = true;
+            return true;
         } else if (e < dato) {
-            estaRec(e, nodo->izq, exito);
+            return estaRec(nodo->izq, e);
         } else {
-            estaRec(e, nodo->dcha, exito);
+            return estaRec(nodo->dcha, e);
         }
     }
 }
 
 template<typename Elemento>
 bool esta (coleccion<Elemento>& c, const Elemento& e) {
-    bool exito = false;
-    estaRec<Elemento> (e, c.raiz, exito);
-    return exito;
+    return estaRec<Elemento> (c.raiz, e);
 }
 
 // PARCIAL: Operación no definida si <e> no esta en c
 template<typename Elemento>
-void obtenerUltimoRec (const Elemento& e, Elemento& ultimo, typename coleccion<Elemento>::Nodo*& nodo, bool& exito) {
+bool obtenerUltimoRec (typename coleccion<Elemento>::Nodo*& nodo, const Elemento& e, Elemento& ultimo) {
     if (nodo == nullptr) {
-        exito = false;
+        return false;
     } else {
         Elemento dato;
         bool error;
         cima(nodo->p, dato, error);
 
         if (e == dato) {
-            exito = true;
             ultimo = dato;
+            return true;
         } else if (e < dato) {
-            obtenerUltimoRec(e, ultimo, nodo->izq, exito);
+            return obtenerUltimoRec(nodo->izq, e, ultimo);
         } else {
-            obtenerUltimoRec(e, ultimo, nodo->dcha, exito);
+            return obtenerUltimoRec(nodo->dcha, e, ultimo);
         }
     }
 }
 
 template<typename Elemento>
-void obtenerUltimo (coleccion<Elemento>& c, const Elemento& e, Elemento& ultimo) {
-    bool exito;
-    obtenerUltimoRec<Elemento> (e, ultimo, c.raiz, exito);
+bool obtenerUltimo (coleccion<Elemento>& c, const Elemento& e, Elemento& ultimo) {
+    return obtenerUltimoRec<Elemento> (c.raiz, e, ultimo);
 }
 
 template<typename Elemento>
-void borrarMax (pila<Elemento>& e, typename coleccion<Elemento>::Nodo*& nodo) {
+void borrarMax (typename coleccion<Elemento>::Nodo*& nodo, pila<Elemento>& e) {
     if (nodo->dcha == nullptr) {    // El máximo del árbol esta en la raiz
         typename coleccion<Elemento>::Nodo* aux;
         e = nodo->p;
-
         aux = nodo;
         nodo = nodo->izq;
         delete aux;
     } else {    // El máximo del árbol esta en el subárbol derecho
-        borrarMax (e, nodo->dcha);
+        borrarMax (nodo->dcha, e);
     }
 }
 
 template<typename Elemento>
-void borrarRec (Elemento& e, typename coleccion<Elemento>::Nodo*& nodo) {
+int borrarRec (typename coleccion<Elemento>::Nodo*& nodo, Elemento& e) {
     if (nodo != nullptr) {
         Elemento dato;
         bool error;
@@ -219,62 +215,75 @@ void borrarRec (Elemento& e, typename coleccion<Elemento>::Nodo*& nodo) {
 
         if (e == dato) {    // Elemento encontrado
             typename coleccion<Elemento>::Nodo* aux;
+            int totalBorrados = altura(nodo->p);
             liberar(nodo->p);
             if (nodo->izq == nullptr) { // Sustitucion del nodo por su sucesor(derecho)
                 aux = nodo;
                 nodo = nodo->dcha;
                 delete aux;
             } else {
-                borrarMax(nodo->p, nodo->izq);  // Si tiene hijo izquierdo...
+                borrarMax(nodo->izq, nodo->p);  // Si tiene ambos hijos...
             }
+            return totalBorrados;
         } else if (e < dato) {
-            borrarRec(e, nodo->izq);
+            return borrarRec(nodo->izq, e);
         } else {
-            borrarRec(e, nodo->dcha);
+            return borrarRec(nodo->dcha, e);
         }
+    } else {
+        return 0;
     }
 }
 
 template<typename Elemento>
-void borrar (coleccion<Elemento>& c, Elemento& e) {
-    borrarRec<Elemento> (e, c.raiz);
+bool borrar (coleccion<Elemento>& c, Elemento& e) {
+    int totalBorrados = borrarRec<Elemento> (c.raiz, e);
+    if (totalBorrados > 0) {
+        c.total -= totalBorrados;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 template<typename Elemento>
-void borrarUltimoRec (Elemento& e, typename coleccion<Elemento>::Nodo*& nodo, bool& borrado) {
+bool borrarUltimoRec (typename coleccion<Elemento>::Nodo*& nodo, Elemento& e) {
     if (nodo != nullptr) {
         Elemento dato;
         bool error;
         cima(nodo->p, dato, error);
 
         if (e == dato) {    // Elemento encontrado
-            borrado = true;
             desapilar(nodo->p);
             if (esVacia(nodo->p)) {
+                typename coleccion<Elemento>::Nodo* aux;
                 if (nodo->izq == nullptr) { // Sustitución del nodo por su sucesor(derecho)
-                    typename coleccion<Elemento>::Nodo* aux = new typename coleccion<Elemento>::Nodo;
                     aux = nodo;
                     nodo = nodo->dcha;
                     delete aux;
                 } else {    // igual falta el si derecha es nullptr
-                    borrarMax(nodo->p, nodo->izq);  // Si tiene hijo izquierdo...
+                    borrarMax(nodo->izq, nodo->p);  // Si tiene ambos hijos...
                 }
             }
+            return true;
         } else if (e < dato) {
-            borrarUltimoRec(e, nodo->izq, borrado);
+            return borrarUltimoRec(nodo->izq, e);
         } else {
-            borrarUltimoRec(e, nodo->dcha, borrado);
+            return borrarUltimoRec(nodo->dcha, e);
         }
     } else {
-        borrado = false;
+        return false;
     }
 }
 
 template<typename Elemento>
-void borrarUltimo (coleccion<Elemento>& c, Elemento& e) {
-    bool borrado = false;
-    borrarUltimoRec<Elemento> (e, c.raiz, borrado);
-    if (borrado) c.total--;
+bool borrarUltimo (coleccion<Elemento>& c, Elemento& e) {
+    if (borrarUltimoRec<Elemento> (c.raiz, e)) {
+        c.total--;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 template<typename Elemento>
@@ -306,9 +315,10 @@ bool existeSiguiente (const coleccion<Elemento>& c) {
 
 // PARCIAL: Operación no definida si no quedan elementos por visitar.
 template<typename Elemento>
-void siguiente (coleccion<Elemento> &c, Elemento& next, bool& error) {
+bool siguiente (coleccion<Elemento> &c, Elemento& next) {
     if (existeSiguiente(c)) {
         typename coleccion<Elemento>::Nodo* aux;
+        bool error;
         cima(c.iter, aux, error);
         siguiente(aux->p, next, error);
 
@@ -322,9 +332,9 @@ void siguiente (coleccion<Elemento> &c, Elemento& next, bool& error) {
                 aux = aux->izq;
             }
         }
-        error = false;
+        return true;
     } else {
-        error = true;
+        return false;
     }
 }
 
