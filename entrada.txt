@@ -9,11 +9,38 @@ A
 A
 -1.5 1.5 -UNO_y_MEDIO
 A
-2 2
+2 2 DOS
 A
-4 4
+4 4 CUATRO
 A
+-5 -5 -CINCO
+A
+-5 -5 -CINCO_REP_1
+A
+-5 -5 -CINCO_REP_2
+E
+10 10
+E
 -5 -5
-A
+OU
+10 10 
+OU
 -5 -5
-A
+LI
+1.5 1.5
+LI
+100 100
+LT
+LI
+-5 -5
+B
+-5 -5
+LI
+-5 -5
+LI
+3 3
+BU
+3 3
+LI
+3 3
+LT
