@@ -1,10 +1,10 @@
 #***************************************************************************
 # File:   	Makefile
-# Authores: Pablo Lacueva & Hector Toral
+# Authores: Pablo Lacueva(799134) & Hector Toral(798095)
 # Date:   	dic 2020
 # Coms:   	
 #         	Ejecutar 'make' para compilar
-#         	Ejecutar 'make clean'para limpiar (borrar lo que genere)
+#         	Ejecutar 'make clean'para limpiar (borra lo que genere)
 #***************************************************************************
 
 #---------------------------------------------------------

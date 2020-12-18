@@ -1,9 +1,9 @@
 //-------------------------------------------------------------------------------------------
 // File:    colecciones.h
 // Authors: Pablo Lacueva(799134) & Hector Toral(798095)
-// Date:    nov 2020
+// Date:    dic 2020
 // Coms:    Practica 2 de EDA
-//          Link del repositorio: https://github.com/hec7orci7o/EDA_Practica1
+//          Link del repositorio: https://github.com/hec7orci7o/EDA_Practica2
 //-------------------------------------------------------------------------------------------
 
 #ifndef COLECCIONES_H
@@ -34,8 +34,7 @@ template<typename Elemento> void anyadir (coleccion<Elemento>& c, const Elemento
 template<typename Elemento> bool esta (coleccion<Elemento>& c, const Elemento& e);
 
 // Si en <c> hay algún elemento igual a <e>, devuelve el último elemento igual a <e> que fue
-// añadido a la colección <c>.
-// PARCIAL: Operación no definida si <e> no esta en c
+// añadido a la colección <c> y "TRUE", en caso contrario devuelve "FALSE".
 template<typename Elemento> bool obtenerUltimo (coleccion<Elemento>& c, const Elemento& e, Elemento& ultimo);
 
 // Si en <c> hay algún elemento igual a <e>, devuelve la colección resultante de borrar de <c>
@@ -52,6 +51,7 @@ template<typename Elemento> bool borrarUltimo (coleccion<Elemento>& c, Elemento&
 template<typename Elemento> int tamanio (const coleccion<Elemento>& c);
 
 // Devuelve "TRUE" si y solo si <c> no tiene ningún elemento.
+// Caso contrario devuelve "FALSE".
 template<typename Elemento> bool esVacia (const coleccion<Elemento>& c);
 
 // Inicializa el iterador para recorrer los elementos de la colección <c>, de forma que el
@@ -62,8 +62,8 @@ template<typename Elemento> void iniciarIterador (coleccion<Elemento>& c);
 // devuelve "FALSE" si ya se ha visitado el último elemento.
 template<typename Elemento> bool existeSiguiente (const coleccion<Elemento>& c);
 
-// Devuelve el siguiente elemento a visitar con el iterador de la colección <c> y avanza el iterador
-// PARCIAL: Operación no definida si no quedan elementos por visitar.
+// Devuelve el siguiente elemento a visitar con el iterador de la colección <c> y avanza el iterador.
+// A su vez, devuelve "TRUE" en caso de que se haya podido avanzar, en caso contrario, devuelve "FASLE".
 template<typename Elemento> bool siguiente (coleccion<Elemento> &c, Elemento& next);
 
 // FUNCIONES AUXILIARES, NO USAR BAJO NINGÚN CONCEPTO.
@@ -108,13 +108,13 @@ struct coleccion {
         friend int  borrarRec<Elemento> (coleccion<Elemento>::Nodo*& nodo, Elemento& e);
 };
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(1)
 void crear (coleccion<Elemento>& c) {
     c.raiz = nullptr;
     c.total = 0;
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(n)
 void anyadirRec (const Elemento& e, typename coleccion<Elemento>::Nodo*& nodo) {
     if (nodo == nullptr) {
         nodo = new typename coleccion<Elemento>::Nodo;
@@ -137,13 +137,13 @@ void anyadirRec (const Elemento& e, typename coleccion<Elemento>::Nodo*& nodo) {
     }
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor = anyadirRec(e, nodo)
 void anyadir (coleccion<Elemento>& c, const Elemento& e) {
     anyadirRec<Elemento> (e, c.raiz);
     c.total++;
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(n)
 bool estaRec (typename coleccion<Elemento>::Nodo*& nodo, const Elemento& e) {
     if (nodo == nullptr) {
         return false;
@@ -162,13 +162,13 @@ bool estaRec (typename coleccion<Elemento>::Nodo*& nodo, const Elemento& e) {
     }
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor = estaRec (nodo, e)
 bool esta (coleccion<Elemento>& c, const Elemento& e) {
     return estaRec<Elemento> (c.raiz, e);
 }
 
 // PARCIAL: Operación no definida si <e> no esta en c
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(n)
 bool obtenerUltimoRec (typename coleccion<Elemento>::Nodo*& nodo, const Elemento& e, Elemento& ultimo) {
     if (nodo == nullptr) {
         return false;
@@ -193,7 +193,7 @@ bool obtenerUltimo (coleccion<Elemento>& c, const Elemento& e, Elemento& ultimo)
     return obtenerUltimoRec<Elemento> (c.raiz, e, ultimo);
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(n)
 void borrarMax (typename coleccion<Elemento>::Nodo*& nodo, pila<Elemento>& e) {
     if (nodo->dcha == nullptr) {    // El máximo del árbol esta en la raiz
         typename coleccion<Elemento>::Nodo* aux;
@@ -246,7 +246,7 @@ bool borrar (coleccion<Elemento>& c, Elemento& e) {
     }
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(n)
 bool borrarUltimoRec (typename coleccion<Elemento>::Nodo*& nodo, Elemento& e) {
     if (nodo != nullptr) {
         Elemento dato;
@@ -276,7 +276,7 @@ bool borrarUltimoRec (typename coleccion<Elemento>::Nodo*& nodo, Elemento& e) {
     }
 }
 
-template<typename Elemento>
+template<typename Elemento> 
 bool borrarUltimo (coleccion<Elemento>& c, Elemento& e) {
     if (borrarUltimoRec<Elemento> (c.raiz, e)) {
         c.total--;
@@ -286,17 +286,17 @@ bool borrarUltimo (coleccion<Elemento>& c, Elemento& e) {
     }
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(1)
 int tamanio (const coleccion<Elemento>& c) {
     return c.total;
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(1)
 bool esVacia (const coleccion<Elemento>& c) {
     return c.raiz == nullptr;
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(n)
 void iniciarIterador (coleccion<Elemento>& c) {
     typename coleccion<Elemento>::Nodo* aux;
     crearVacia (c.iter);
@@ -308,13 +308,13 @@ void iniciarIterador (coleccion<Elemento>& c) {
     }
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(1)
 bool existeSiguiente (const coleccion<Elemento>& c) {
     return !esVacia (c.iter);
 }
 
 // PARCIAL: Operación no definida si no quedan elementos por visitar.
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(n)
 bool siguiente (coleccion<Elemento> &c, Elemento& next) {
     if (existeSiguiente(c)) {
         typename coleccion<Elemento>::Nodo* aux;

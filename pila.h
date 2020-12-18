@@ -13,6 +13,8 @@
 
 using namespace std;
 
+// IMPORTANTE: El typename Elemento deberá tener sobrecargado los operadores "==" y "<"
+
 // El TAD <pila> representa una pila de elementos genérica. En este caso,
 // se trata de una pila doblemente enlazada.
 template<typename Elemento> struct pila;
@@ -52,23 +54,23 @@ template<typename Elemento> void iniciarIterador (pila<Elemento>& p);
 template<typename Elemento> bool existeSiguiente (const pila<Elemento>& p);
 
 // Implementa las operaciones "siguiente" y "avanza" de la especificación, es decir:
-// Si existeSiguiente(p), error toma el valor falso, <e> toma el valor del siguiente
+// Si existeSiguiente(p), devuelve true, <e> toma el valor del siguiente
 // elemento de la pila, y se avanza el iterador al elemento siguiente de la pila.
-// Si no existeSiguiente(p), error toma el valor verdad, <e> queda indefinido y <p> queda como estaba.
+// Si no existeSiguiente(p), return false, <e> queda indefinido y <p> queda como estaba.
 template<typename Elemento> bool siguiente (pila<Elemento>& p, Elemento& e);
 
 template <typename Elemento>
 struct pila {
     private:
         struct unDato {
-            Elemento dato;  // dato de tipo <Elemento>. <Elemento> es un tipo generico
-            unDato* sig;    // puntero que apunta a la futura cima.
-            unDato* ant;    // puntero que apunta al dato anterior.
+            Elemento dato;  // Dato de tipo <Elemento>.
+            unDato* sig;    // Puntero que apunta a la futura cima.
+            unDato* ant;    // Puntero que apunta al dato anterior.
         };
-        unDato* cim;
-        unDato* bas;
-        unDato* iter;
-        int alt;
+        unDato* cim;    // Puntero al nodo que guarda información sobre la cima de la pila.
+        unDato* bas;    // Puntero al nodo que guarda información sobre la base de la pila.
+        unDato* iter;   // Puntero que se usará para recorrer la pila.
+        int alt;        // Lleva la cuenta de el número de elementos que hay en la pila.
     public:
         friend void crearVacia<Elemento> (pila<Elemento>& p);
         friend void apilar<Elemento> (pila<Elemento>& p, const Elemento& e);
@@ -84,7 +86,7 @@ struct pila {
         friend bool siguiente<Elemento> (pila<Elemento>& p, Elemento& e);
 };
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(1)
 void crearVacia (pila<Elemento>& p) {
     p.bas = nullptr;
     p.cim = nullptr;
@@ -92,7 +94,7 @@ void crearVacia (pila<Elemento>& p) {
 }
 
 // puntero de la base cuidado con ant
-template <typename Elemento>
+template <typename Elemento> // Coste Algorítmico Peor: O(1)
 void apilar (pila<Elemento>& p, const Elemento& e) {
     typename pila<Elemento>::unDato* aux = new typename pila<Elemento>::unDato;
     aux->dato = e;
@@ -110,7 +112,7 @@ void apilar (pila<Elemento>& p, const Elemento& e) {
     p.alt++;            // Altura de la pila + 1.
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(1)
 void desapilar (pila<Elemento>& p) {
     typename pila<Elemento>::unDato* aux;
     if (p.alt > 0) {
@@ -127,7 +129,7 @@ void desapilar (pila<Elemento>& p) {
     }
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(1)
 void cima (const pila<Elemento>& p, Elemento& e, bool& error) {
     if (p.alt == 0) error = true;
     else {
@@ -136,17 +138,17 @@ void cima (const pila<Elemento>& p, Elemento& e, bool& error) {
     }
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(1)
 bool esVacia (const pila<Elemento>& p) {
     return p.alt == 0;
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(1)
 int altura (const pila<Elemento>& p) {
     return p.alt;
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(n)
 bool operator== (const pila<Elemento>& pila1, const pila<Elemento>& pila2) {
     if (pila1.alt != pila2.alt) return false;
     else {
@@ -164,7 +166,7 @@ bool operator== (const pila<Elemento>& pila1, const pila<Elemento>& pila2) {
     }
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(n)
 void liberar (pila<Elemento>& p) {
     typename pila<Elemento>::unDato* aux = new typename pila<Elemento>::unDato;
     aux = p.cim;
@@ -178,17 +180,17 @@ void liberar (pila<Elemento>& p) {
     p.bas = nullptr;
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(1)
 void iniciarIterador (pila<Elemento>& p) {
     p.iter = p.bas;
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(1)
 bool existeSiguiente (const pila<Elemento>& p) {
     return p.iter != nullptr;
 }
 
-template<typename Elemento>
+template<typename Elemento> // Coste Algorítmico Peor: O(1)
 bool siguiente (pila<Elemento>& p, Elemento& e) {
     if (existeSiguiente(p)) {
         e = p.iter->dato;

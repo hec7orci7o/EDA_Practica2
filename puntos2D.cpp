@@ -1,5 +1,5 @@
 //-------------------------------------------------------------------------------------------
-// File:    punto2D.cpp
+// File:    puntos2D.cpp
 // Authors: Pablo Lacueva(799134) & Hector Toral(798095)
 // Date:    dic 2020
 // Coms:    Practica 2 de EDA
