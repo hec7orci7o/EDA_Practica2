@@ -320,7 +320,7 @@ bool siguiente (coleccion<Elemento> &c, Elemento& next) {
         typename coleccion<Elemento>::Nodo* aux;
         bool error;
         cima(c.iter, aux, error);
-        siguiente(aux->p, next, error);
+        siguiente(aux->p, next);
 
         if (!existeSiguiente(aux->p)) {
             desapilar(c.iter);

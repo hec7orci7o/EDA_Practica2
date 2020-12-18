@@ -11,4 +11,4 @@
 make clean
 make
 ./practica2
-#clear
+clear

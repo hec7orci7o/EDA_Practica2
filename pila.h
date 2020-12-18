@@ -55,7 +55,7 @@ template<typename Elemento> bool existeSiguiente (const pila<Elemento>& p);
 // Si existeSiguiente(p), error toma el valor falso, <e> toma el valor del siguiente
 // elemento de la pila, y se avanza el iterador al elemento siguiente de la pila.
 // Si no existeSiguiente(p), error toma el valor verdad, <e> queda indefinido y <p> queda como estaba.
-template<typename Elemento> void siguiente (pila<Elemento>& p, Elemento& e, bool& error);
+template<typename Elemento> bool siguiente (pila<Elemento>& p, Elemento& e);
 
 template <typename Elemento>
 struct pila {
@@ -81,7 +81,7 @@ struct pila {
 
         friend void iniciarIterador<Elemento> (pila<Elemento>& p);
         friend bool existeSiguiente<Elemento> (const pila<Elemento>& p);
-        friend void siguiente<Elemento> (pila<Elemento>& p, Elemento& e, bool& error);
+        friend bool siguiente<Elemento> (pila<Elemento>& p, Elemento& e);
 };
 
 template<typename Elemento>
@@ -118,6 +118,12 @@ void desapilar (pila<Elemento>& p) {
         p.cim = p.cim->ant; // Asignamos cima al anterior dato.
         delete aux;         // Liberamos la memoria donde se alamcenaba la antigua cima
         p.alt--;            // Altura de la pila - 1.
+        if (p.alt == 0) {
+            p.cim = nullptr;
+            p.bas = nullptr;
+        } else {
+            p.cim->sig = nullptr;
+        }
     }
 }
 
@@ -183,13 +189,13 @@ bool existeSiguiente (const pila<Elemento>& p) {
 }
 
 template<typename Elemento>
-void siguiente (pila<Elemento>& p, Elemento& e, bool& error) {
+bool siguiente (pila<Elemento>& p, Elemento& e) {
     if (existeSiguiente(p)) {
-        error = false;
         e = p.iter->dato;
         p.iter = p.iter->sig;
+        return true;
     } else {
-        error = true;
+        return false;
     }
 }
 
